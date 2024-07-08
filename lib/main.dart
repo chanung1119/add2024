@@ -54,8 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Align(
       alignment: Alignment(0, -0.7),
       child: Container(
-          width: MediaQuery.of(context).size.width/2,
-          height: MediaQuery.of(context).size.width/2,
+          width: MediaQuery.of(context).size.width/1.5,
+          height: MediaQuery.of(context).size.width/1.5,
           decoration: BoxDecoration(
             color: Colors.grey.withOpacity(0.5),
             borderRadius: BorderRadius.all(Radius.circular(20)),
