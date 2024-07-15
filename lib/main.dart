@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 import 'dart:async';
+import 'package:serious_python/serious_python.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text('3D Viewer'),
+          title: const Text('3D Viewer'),
         ),
         body: const MyHomePage(),
           ),
@@ -35,30 +36,36 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   Flutter3DController controller = Flutter3DController();
-  double x_offset = 0.0;
+  double xOffset = 0.0;
 
   @override
   void initState() {
     super.initState();
     //3d 모델 자동 회전 기능
-    Timer.periodic(Duration(milliseconds: 10), (timer) {
+    runPython();
+    Timer.periodic(const Duration(milliseconds: 10), (timer) {
       controller.resetCameraTarget();
-      controller.setCameraOrbit(x_offset, 70, 100);
-      x_offset += 0.4;
+      controller.setCameraOrbit(xOffset, 70, 100);
+      xOffset += 0.4;
     });
+  }
+
+  void runPython() {
+    SeriousPython.run("app/app.zip", appFileName: "app.py", sync: false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment(0, -0.7),
+      alignment: const Alignment(0, -0.7),
       child: Container(
-          width: MediaQuery.of(context).size.width/1.5,
-          height: MediaQuery.of(context).size.width/1.5,
+          width: MediaQuery.of(context).size.width/1.2,
+          height: MediaQuery.of(context).size.width/1.2,
           decoration: BoxDecoration(
             color: Colors.grey.withOpacity(0.5),
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
             boxShadow: [BoxShadow(
               color: Colors.grey.withOpacity(0.7),
               blurRadius: 5.0,
