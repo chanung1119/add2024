@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 import 'dart:async';
 import 'package:serious_python/serious_python.dart';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
 
 void main() {
+  startPython();
   runApp(const MyApp());
+}
+
+void startPython() async {//start 'main.py'
+  SeriousPython.run("app/app.zip");
 }
 
 class MyApp extends StatelessWidget {
@@ -22,42 +29,66 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text('3D Viewer'),
         ),
-        body: const MyHomePage(),
+        body: const VeiwMolecule(),
           ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class VeiwMolecule extends StatefulWidget {
+  const VeiwMolecule({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<VeiwMolecule> createState() => _VeiwMoleculeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-
-  Flutter3DController controller = Flutter3DController();
+class _VeiwMoleculeState extends State<VeiwMolecule> {
+  late Flutter3DController _controller;
   double xOffset = 0.0;
+  String? _result1;
 
   @override
   void initState() {
     super.initState();
-    //3d 모델 자동 회전 기능
-    runPython();
-    Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      controller.resetCameraTarget();
-      controller.setCameraOrbit(xOffset, 70, 100);
+    _controller = Flutter3DController();
+    getServiceResult();
+    Timer.periodic(const Duration(milliseconds: 10), (timer) {//automatically rotate 3d model
+      _controller.resetCameraTarget();
+      _controller.setCameraOrbit(xOffset, 70, 100);
       xOffset += 0.4;
     });
   }
 
-  void runPython() {
-    SeriousPython.run("app/app.zip", appFileName: "app.py", sync: false);
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future getServiceResult() async {
+    while(true) {
+      try {
+        var response = await http.get(Uri.parse("http://127.0.0.1:8080"));
+        setState(() {
+          _result1 = response.body;
+        });
+        return;
+      }
+      catch (_) {
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget? result;
+    if(_result1 != null) {
+      result = Text(_result1!);
+    }
+    else {
+      result = const CircularProgressIndicator();
+    }
+
     return Align(
       alignment: const Alignment(0, -0.7),
       child: Container(
@@ -73,13 +104,14 @@ class _MyHomePageState extends State<MyHomePage> {
               offset: const Offset(7, 7),
             ),]
           ),
-          child: Flutter3DViewer(
-            progressBarColor: Colors.transparent,
-            controller: controller,
-            src: 'assets/molecule.glb',
-          ),
+          child: result
         ),
     );
   }
-
 }
+
+// Flutter3DViewer(
+// progressBarColor: Colors.transparent,
+// controller: _controller,
+// src: 'assets/h2o _molecule.glb',
+// ),

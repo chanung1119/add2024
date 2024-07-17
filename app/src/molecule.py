@@ -2,7 +2,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 import trimesh
 
-def smiles_to_glb(smiles, output_file):
+def smiles_to_glb(smiles, output_file):#Make .glb file based on smiles
     mol = Chem.MolFromSmiles(smiles)
     mol = Chem.AddHs(mol)
     AllChem.EmbedMolecule(mol)
@@ -51,12 +51,7 @@ def smiles_to_glb(smiles, output_file):
     scene = trimesh.Scene(objects)
     scene.export(output_file, file_type='glb')
 
-
-def main():
-    smiles = 'CN=C=O'
-    output_file = 'test.glb'
-    smiles_to_glb(smiles, output_file)
-    print("---------------------makeGlb---------------------")
-
 if __name__ == '__main__':
-    main()
+    smiles = 'CN=C=O'#example
+    output_file = 'molecule.glb'
+    smiles_to_glb(smiles, output_file)
