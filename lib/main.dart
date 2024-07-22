@@ -86,8 +86,8 @@ class _VeiwMoleculeState extends State<VeiwMolecule> {
       result = Flutter3DViewer(
         progressBarColor: Colors.transparent,
         controller: _controller,
-        // src: 'http://127.0.0.1:8080/molecule.glb',
-        src: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
+        // src: 'http://127.0.0.1:8080/molecule.glb', //이거는 안됨
+        src: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb', //이거는 됨
       );
     }
     else {
