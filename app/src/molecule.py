@@ -35,7 +35,7 @@ def smiles_to_glb(smiles, output_file):#Make .glb file based on smiles
         sphere.apply_translation([atom["x"], atom["y"], atom["z"]])
         spheres.append(sphere)
      
-    cylinders = []   
+    cylinders = []
     for bond in bonds:
         startX = atoms[bond["start"]]["x"]
         startY = atoms[bond["start"]]["y"]
