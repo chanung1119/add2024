@@ -28,27 +28,11 @@ def run_python():
         file_name = "molecule.glb"
         os.system('molecule.py')
         if os.path.exists(file_name):
-            return send_file(file_name, as_attachment=True)
+            return send_file(file_name, mimetype='model/gltf+json')
         else:
             return 'File not found!'
     except Exception as e:
         return str(e)
-
-@app.route("/modelViewer")
-def index():
-    return render_template_string('''
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    </head>
-    <body>
-        <model-viewer src="http://127.0.0.1:8080/molecule.glb" alt="A 3D model" auto-rotate camera-controls></model-viewer>
-    </body>
-    </html>
-    ''')
 
 
 app.run(port=port)

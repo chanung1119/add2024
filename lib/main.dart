@@ -66,7 +66,7 @@ class _VeiwMoleculeState extends State<VeiwMolecule> {
   Future getServiceResult() async {
     while(true) {
       try {
-        var response = await http.get(Uri.parse("http://127.0.0.1:8080"));
+        var response = await http.get(Uri.parse("http://127.0.0.1:8080"));//waiting for connection
         setState(() {
           _result = response.body;
         });
@@ -83,12 +83,17 @@ class _VeiwMoleculeState extends State<VeiwMolecule> {
   Widget build(BuildContext context) {
     Widget? result;
     if(_result != null) {
-      result = Flutter3DViewer(
-        progressBarColor: Colors.transparent,
-        controller: _controller,
-        // src: 'http://127.0.0.1:8080/molecule.glb', //이거는 안됨
-        src: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb', //이거는 됨
-      );
+      try {
+        result = Flutter3DViewer(
+          progressBarColor: Colors.transparent,
+          controller: _controller,
+          // src: 'http://127.0.0.1:8080/molecule.glb', //에러 발생
+          src: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb', //정상적으로 실행
+        );
+      }
+      catch(e) {
+        print('Something really unknown: $e');
+      }
     }
     else {
       result = const CircularProgressIndicator();
