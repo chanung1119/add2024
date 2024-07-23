@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 import 'dart:async';
 import 'package:serious_python/serious_python.dart';
-import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -45,7 +44,7 @@ class VeiwMolecule extends StatefulWidget {
 class _VeiwMoleculeState extends State<VeiwMolecule> {
   late Flutter3DController _controller;
   double xOffset = 0.0;
-  String? _result1;
+  String? _result;
 
   @override
   void initState() {
@@ -69,7 +68,7 @@ class _VeiwMoleculeState extends State<VeiwMolecule> {
       try {
         var response = await http.get(Uri.parse("http://127.0.0.1:8080"));
         setState(() {
-          _result1 = response.body;
+          _result = response.body;
         });
         return;
       }
@@ -79,11 +78,17 @@ class _VeiwMoleculeState extends State<VeiwMolecule> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     Widget? result;
-    if(_result1 != null) {
-      result = Text(_result1!);
+    if(_result != null) {
+      result = Flutter3DViewer(
+        progressBarColor: Colors.transparent,
+        controller: _controller,
+        // src: 'http://127.0.0.1:8080/molecule.glb', //이거는 안됨
+        src: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb', //이거는 됨
+      );
     }
     else {
       result = const CircularProgressIndicator();
